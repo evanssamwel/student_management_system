@@ -1,88 +1,90 @@
 import os
-import platform
 
-global listStd #Making ListStd As Super Global Variable
-listStd = ["Kim", "Jenny", "Odhis", "Twatwai"] #List Of Students
-
-def manageStudent(): #Function For The Student Management System
-
-	x = "#" * 30
-	y = "=" * 28
-	global bye #Making Bye As Super Global Variable
-	bye = "\n {}\n# {} #\n# ===> Brought To You By <===  #\n# ===> Ananya - Ninja hattori <===  #\n# {} #\n {}".format(x, y, y, x) # Will Print GoodBye Message
-
-	#Printing Welcome Message And options For This Program
-	print(""" 
-
+# Constants
+WELCOME_MESSAGE = """
   ------------------------------------------------------
  |======================================================| 
- |======== Welcome To Student Management System	========|
+ |======== Welcome To Student Management System ========|
  |======================================================|
   ------------------------------------------------------
 
-Enter 1 : To View Student's List ...
-Enter 2 : To Add New Student ...
-Enter 3 : To Search Student ...
-Enter 4 : To Remove Student ...
-		
-		""")
+Enter 1 : To View Student's List
+Enter 2 : To Add New Student
+Enter 3 : To Search Student
+Enter 4 : To Remove Student
+"""
 
-	try: #Using Exceptions For Validation
-		userInput = int(input("Please Select An Above Option: ")) #Will Take Input From User
-	except ValueError:
-		exit("\nHy! That's Not A Number") #Error Message
-	else:
-		print("\n") #Print New Line
+GOODBYE_MESSAGE = """
+##############################################
+#           Thank You For Using              #
+#      Student Management System App         #
+##############################################
+"""
 
-	#Checking Using Option	
-	if(userInput == 1): #This Option Will Print List Of Students
-		print("List Students\n")  
-		for students in listStd:
-			print("=> {}".format(students))
+def display_students(students):
+    """Display the list of students."""
+    if not students:
+        print("\nNo students found in the database.")
+    else:
+        print("\nList of Students:")
+        for student in students:
+            print(f"=> {student}")
 
-	elif(userInput == 2): #This Option Will Add New Student In The List
-		newStd = input("Enter New Student: ")
-		if(newStd in listStd): #This Condition Checking The New Student Is Already In List Ur Not
-			print("\nThis Student {} Already In The Database".format(newStd))  #Error Message
-		else:	
-			listStd.append(newStd)
-			print("\n=> New Student {} Successfully Add \n".format(newStd))
-			for students in listStd:
-				print("=> {}".format(students))	
+def add_student(students):
+    """Add a new student to the list."""
+    new_student = input("Enter New Student Name: ").strip()
+    if not new_student:
+        print("\nStudent name cannot be empty.")
+    elif new_student in students:
+        print(f"\nStudent '{new_student}' is already in the database.")
+    else:
+        students.append(new_student)
+        print(f"\nStudent '{new_student}' successfully added.")
 
-	elif(userInput == 3): #This Option Will Search Student From The List
-		srcStd = input("Enter Student Name To Search: ")
-		if(srcStd in listStd): #This Condition Searching The Student
-			print("\n=> Record Found Of Student {}".format(srcStd))
-		else:
-			print("\n=> No Record Found Of Student {}".format(srcStd)) #Error Message
+def search_student(students):
+    """Search for a student in the list."""
+    search_name = input("Enter Student Name to Search: ").strip()
+    if search_name in students:
+        print(f"\nStudent '{search_name}' found in the database.")
+    else:
+        print(f"\nNo record found for student '{search_name}'.")
 
-	elif(userInput == 4): #This Option Will Remove Student From The List
-		rmStd = input("Enter Student Name To Remove: ")
-		if(rmStd in listStd): #This Condition Removing The Student From The List 
-			listStd.remove(rmStd)
-			print("\n=> Student {} Successfully Deleted \n".format(rmStd))
-			for students in listStd:
-				print("=> {}".format(students))
-		else:
-			print("\n=> No Record Found of This Student {}".format(rmStd)) #Error Message
-	 
-	elif(userInput < 1 or userInput > 4): #Validating User Option
-		print("Please Enter Valid Option")	#Error Message	
-						
-#brought to you by code-projects.org
-manageStudent()
+def remove_student(students):
+    """Remove a student from the list."""
+    remove_name = input("Enter Student Name to Remove: ").strip()
+    if remove_name in students:
+        students.remove(remove_name)
+        print(f"\nStudent '{remove_name}' successfully removed.")
+    else:
+        print(f"\nNo record found for student '{remove_name}'.")
 
-def runAgain(): #Making Runable Problem1353
-	runAgn = input("\nwant To Run Again Y/n: ")
-	if(runAgn.lower() == 'y'):
-		if(platform.system() == "Windows"): #Checking User OS For Clearing The Screen
-			print(os.system('cls')) 
-		else:
-			print(os.system('clear'))
-		manageStudent()
-		runAgain()
-	else:
-		quit(bye) #Print GoodBye Message And Exit The Program
+def manage_students():
+    """Main menu for the student management system."""
+    students = ["Kim", "Jenny", "Odhis", "Twatwai"]  # Initial list of students
 
-runAgain()		
+    while True:
+        print(WELCOME_MESSAGE)
+        try:
+            user_input = int(input("Please Select an Option: ").strip())
+        except ValueError:
+            print("\nInvalid input. Please enter a number between 1 and 4.")
+            continue
+
+        if user_input == 1:
+            display_students(students)
+        elif user_input == 2:
+            add_student(students)
+        elif user_input == 3:
+            search_student(students)
+        elif user_input == 4:
+            remove_student(students)
+        else:
+            print("\nInvalid option. Please try again.")
+
+        run_again = input("\nDo you want to perform another operation? (Y/N): ").strip().lower()
+        if run_again != 'y':
+            print(GOODBYE_MESSAGE)
+            break
+
+if __name__ == "__main__":
+    manage_students()
